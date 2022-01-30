@@ -3,9 +3,7 @@
     <appender name="access_stdout"
               class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashAccessEncoder">
-          <pattern>
-            %msg%n
-          </pattern>
+
         </encoder>
     </appender>
 
