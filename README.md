@@ -1,25 +1,39 @@
-# Getting Started
+# Visão arquitetural
+Pensando em um modelo arquitetural mais produtivo mas ainda desacoplado, utilizo uma arquitetura hexagonal baseada na implementação realizada pela Netflix (link abaixo).
+- [Ready for changes with Hexagonal Architecture](https://netflixtechblog.com/ready-for-changes-with-hexagonal-architecture-b315ec967749)
 
-### Reference Documentation
-For further reference, please consider the following sections:
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.5.9/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.5.9/maven-plugin/reference/html/#build-image)
-* [Spring for RabbitMQ](https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#boot-features-amqp)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#boot-features-developing-web-applications)
+Este modelo tem isolamento de cada uma das camadas facilitando os testes unitários e a manutenção.
+Idealmente, deve-se deixar apenas uma classe publica por camada e contexto, deixando assim isoladas todas as outras classes com o modificador package-private.
 
-### Guides
-The following guides illustrate how to use some features concretely:
+Cada camada deve criar suas `Exceptions` se necessário. A camanda de HTTP intercepta as exceções via `@ControllerAdvice`e faz o tratamento adequado para HTTP (lembramos que este é um exemplo bem simples e deve ser alterado conforme necessidade).
 
-* [Messaging with RabbitMQ](https://spring.io/guides/gs/messaging-rabbitmq/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
+Abaixo, breve descrição da responsabilidade de cada camada.
 
-docker-compose up -d
+- **transport**: Reponsável pela entrada de dados. Aqui podem ficar os Controllers HTTP ou Listeners SQS, por exemplo.
 
-We expose port 5672 so that our application can connect to RabbitMQ.
+- **interactor**: Responsável pela lógica de negócio, recebe os dados da camada de transport e delega, se necessário, para a camada de datasource.
 
-And, we expose port 15672 so that we can see what our RabbitMQ broker is doing via either the management UI: http://localhost:15672 or the HTTP API: http://localhost:15672/api/index.html.
+- **datasource**: Responsável pelo destino ou armazenamento da informação como banco de dados, sqs, s3, etc. **Esta camada pode ter mais de uma implementação.**
+
+# Passo a passo setup rápido
+1. Compilar o projeto com maven `mvn clean install`
+2. Realizar o import do projeto como maven-project em sua IDE (Eclipse ou Intellij).
+3. Prover um container Rabbitmq (docker-compose) localizado na pasta Docker 
+4. Subir o spring-boot a partir da classe `ApibffcalculadorApplication e servicecalculatorApplication`
+
+
+# Build e Testes
+Para compilar o projeto, é necessário JDK versão 11 e maven 3.6+
+
+
+- Compilar o projeto e rodar os testes `mvn clean install`
+
+# Tecnologias
+Utilizamos na criação deste template as últimas versões disponíveis das bibliotecas como **resilience4j, mapstruct, etc.** Havendo necessidade de upgrade, avaliar a troca no próprio template.
+
+
+# Docker
+- entrar no diretório `docker` e subir docker compose com o comando `docker-compose up -d`
+- RabbitMQ tem uma maneger UI: http://localhost:15672 OU the HTTP API: http://localhost:15672/api/index.html.
 
