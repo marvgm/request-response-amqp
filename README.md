@@ -29,10 +29,6 @@ Para compilar o projeto, é necessário JDK versão 11 e maven 3.6+
 
 - Compilar o projeto e rodar os testes `mvn clean install`
 
-# Tecnologias
-Utilizamos na criação deste template as últimas versões disponíveis das bibliotecas como **resilience4j, mapstruct, etc.** Havendo necessidade de upgrade, avaliar a troca no próprio template.
-
-
 # Docker
 - entrar no diretório `docker` e subir docker compose com o comando `docker-compose up -d`
 - RabbitMQ tem uma maneger UI: http://localhost:15672 OU the HTTP API: http://localhost:15672/api/index.html.
